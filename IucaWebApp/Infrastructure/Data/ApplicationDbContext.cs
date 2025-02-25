@@ -8,4 +8,6 @@ namespace Infrastructure.Data;
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+    public DbSet<Domain.Entities.Product> Products { get; set; }
 }

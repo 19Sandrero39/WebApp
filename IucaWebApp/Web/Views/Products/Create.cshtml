@@ -1,0 +1,78 @@
+﻿@model Domain.Entities.Product
+
+@{
+    ViewData["Title"] = "Добавление продукта";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="p-4 bg-light shadow rounded">
+                <div class="text-center">
+                    <h1 class="mb-4">Добавление продукта</h1>
+                </div>
+                <form asp-action="Create" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label fw-bold">Название</label>
+                                <input type="text" asp-for="Name" class="form-control border-0 shadow-sm"
+                                       required>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="Price" class="form-label fw-bold">Цена</label>
+                                <input type="number" step="0.01" asp-for="Price" class="form-control border-0 shadow-sm"
+                                       required>
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="Brand" class="form-label fw-bold">Бренд</label>
+                                <input type="text" asp-for="Brand" class="form-control border-0 shadow-sm">
+                                <span asp-validation-for="Brand" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="QuantityInStock" class="form-label fw-bold">Количество</label>
+                                <input type="number" step="1" asp-for="QuantityInStock" class="form-control border-0 shadow-sm">
+                                <span asp-validation-for="QuantityInStock" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label fw-bold">Описание</label>
+                                <textarea asp-for="Description" class="form-control border-0 shadow-sm" rows="4"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label asp-for="Image" class="form-label fw-bold">Изображение</label>
+                                <input type="text" asp-for="Image" class="form-control border-0 shadow-sm">
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <button type="submit" class="btn btn-dark rounded-pill w-100">Сохранить</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="btn btn-outline-dark rounded-pill">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

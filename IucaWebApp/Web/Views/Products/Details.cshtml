@@ -1,0 +1,74 @@
+﻿@model Domain.Entities.Product
+
+@{
+    ViewData["Title"] = "Детали продукта";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-8">
+            <div class="card shadow-lg rounded-3">
+                <!-- Изображение сверху -->
+                <div class="position-relative overflow-hidden">
+                    <div class="aspect-ratio-4-3">
+                        <img src="@Model.Image"
+                             class="img-fluid position-absolute top-0 start-0 w-100 h-100 object-fit-contain"
+                             alt="Product Image">
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-3 fw-bold text-center">@Model.Name</h4>
+                    <dl class="row">
+                        <!-- Цена -->
+                        <dt class="col-sm-3 text-end fw-bold">Цена:</dt>
+                        <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+
+                        <!-- Бренд -->
+                        <dt class="col-sm-3 text-end fw-bold">Бренд:</dt>
+                        <dd class="col-sm-9">@Model.Brand</dd>
+
+                        <!-- Количество -->
+                        <dt class="col-sm-3 text-end fw-bold">Количество:</dt>
+                        <dd class="col-sm-9">@Model.QuantityInStock</dd>
+
+                        <!-- Описание -->
+                        <dt class="col-sm-3 text-end fw-bold">Описание:</dt>
+                        <dd class="col-sm-9">@Model.Description</dd>
+                    </dl>
+                </div>
+                <div class="card-footer bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left-short me-2"></i> Вернуться к списку
+                        </a>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil-fill"></i> Редактировать
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash-fill"></i> Удалить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .aspect-ratio-4-3 {
+        height: 0;
+        padding-top: 75%; 
+        position: relative;
+    }
+
+        .aspect-ratio-4-3 img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+</style>
