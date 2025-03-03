@@ -18,7 +18,6 @@
                 <div class="card-body">
                     <form asp-action="Create" method="post">
                         <div class="row mt-3">
-                            <!-- Status -->
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <select asp-for="Status" class="form-select" required>
@@ -30,35 +29,27 @@
                                     <span asp-validation-for="Status" class="text-danger"></span>
                                 </div>
                             </div>
-                            <!-- Total Price -->
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="TotalPrice" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" required />
-                                    <label asp-for="TotalPrice">Общая сумма</label>
-                                    <span asp-validation-for="TotalPrice" class="text-danger"></span>
+                                    <input type="number" class="form-control" id="productPrice" placeholder="Цена товара" readonly />
+                                    <label for="productPrice">Цена товара</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row mt-3">
-                            <!-- Product -->
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <select name="productId" class="form-select" required>
+                                    <select name="productId" id="productId" class="form-select" required asp-items="@ViewBag.ProductId">
                                         <option value="" disabled selected>Выберите товар</option>
-                                        @foreach (var product in ViewBag.ProductId as IEnumerable<SelectListItem>)
-                                        {
-                                            <option value="@product.Value">@product.Text</option>
-                                        }
                                     </select>
-                                    <label>Товар</label>
+                                    <label for="productId">Товар</label>
                                 </div>
                             </div>
-                            <!-- Quantity -->
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input name="quantity" type="number" min="1" class="form-control" placeholder="1" required />
-                                    <label>Количество</label>
+                                    <input name="quantity" type="number" min="1" id="quantity" class="form-control" placeholder="1" required value="1" />
+                                    <label for="quantity">Количество</label>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +72,6 @@
 </div>
 
 
-<!-- Material Design Library -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/material-design-icons-iconfont@5.0.1/dist/material-design-icons.min.css" rel="stylesheet">
 
@@ -181,3 +171,39 @@
         color: transparent;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const productDropdown = document.getElementById('productId');
+        const quantityInput = document.getElementById('quantity');
+        const productPriceInput = document.getElementById('productPrice');
+
+        function updateProductPrice() {
+            const productId = productDropdown.value;
+            const quantity = quantityInput.value;
+
+            if (productId && quantity) { // Проверяем, что продукт выбран и количество указано
+                fetch(`/Baskets/GetProductPrice?productId=${productId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const unitPrice = data.price; // Получаем цену за единицу из JSON ответа
+                        const totalPrice = unitPrice * quantity; // Рассчитываем общую цену
+                        productPriceInput.value = totalPrice.toFixed(2); // Отображаем общую цену, округляем до 2 знаков
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при получении цены товара:', error);
+                        productPriceInput.value = 'Ошибка';
+                    });
+            } else {
+                productPriceInput.value = ''; // Очистить цену, если продукт не выбран или количество не указано
+            }
+        }
+
+        productDropdown.addEventListener('change', updateProductPrice);
+        quantityInput.addEventListener('input', updateProductPrice);
+
+        if(productDropdown.value) {
+            updateProductPrice();
+        }
+    });
+</script>
