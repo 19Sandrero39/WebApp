@@ -1,15 +1,14 @@
-﻿using Domain.Entities;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Data;
+using Domain.Entities;
+using System.Linq;
 
 namespace Web.Controllers
 {
     public class BasketsController : Controller
     {
-
         private readonly ApplicationDbContext _context;
 
         public BasketsController(ApplicationDbContext context)
@@ -51,12 +50,22 @@ namespace Web.Controllers
                 _context.Baskets.Add(basket);
                 _context.SaveChanges();
 
-                // Create a new BasketProduct entry
+                // Получаем продукт из базы данных
+                var product = _context.Products.Find(productId);
+
+                if (product == null)
+                {
+                    ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name", productId);
+                    return View(basket);
+                }
+
+                // Создаем новую запись BasketProduct
                 var basketProduct = new BasketProduct
                 {
                     ProductId = productId,
                     BasketId = basket.Id,
-                    Quantity = quantity
+                    Quantity = quantity,
+                    // Price = product.Price, // Раскомментируйте и добавьте поле Price в BasketProduct если нужно сохранять цену
                 };
 
                 _context.BasketProducts.Add(basketProduct);
@@ -68,7 +77,19 @@ namespace Web.Controllers
             ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name", productId);
             return View(basket);
         }
-    
+
+        // GET: Baskets/GetProductPrice
+        [HttpGet]
+        public JsonResult GetProductPrice(int productId)
+        {
+            var product = _context.Products.Find(productId);
+            if (product == null)
+            {
+                return Json(new { price = 0 }); // Или другой вариант обработки ошибки
+            }
+            return Json(new { price = product.Price });
+        }
+
 
         // GET: BasketsController/Edit/5
         public ActionResult Edit(int id)

@@ -1,119 +1,174 @@
 ﻿@model IEnumerable<Domain.Entities.Basket>
 
-<div class="container">
-    <div class="header">
-        <h1>Baskets</h1>
-        <a class="create-btn" asp-action="Create">Create New</a>
-    </div>
+<div class="basket-list-container">
+    <header class="basket-list-header">
+        <h1 class="basket-list-title">Корзины</h1>
+        <a class="basket-list-create-btn" asp-action="Create">Создать новую корзину</a>
+    </header>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Status</th>
-                <th>Total Price</th>
-                <th>Products</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var basket in Model)
-            {
+    <div class="basket-list-table-wrapper">
+        <table class="basket-list-table">
+            <thead class="basket-list-thead">
                 <tr>
-                    <td>@basket.Id</td>
-                    <td>@basket.Status</td>
-                    <td>@basket.TotalPrice</td>
-                    <td>
-                        @foreach (var product in basket.BasketProducts)
-                        {
-                            <div class="product-item">
-                                @product.Product.Name (Qty: @product.Quantity)
-                            </div>
-                        }
-                    </td>
+                    <th class="basket-list-th">ID</th>
+                    <th class="basket-list-th">Статус</th>
+                    <th class="basket-list-th">Продукты</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="basket-list-tbody">
+                @foreach (var basket in Model)
+                {
+                    <tr class="basket-list-tr">
+                        <td class="basket-list-td">@basket.Id</td>
+                        <td class="basket-list-td">@basket.Status</td>
+                        <td class="basket-list-td">
+                            <div class="basket-list-products-container">
+                                @foreach (var basketProduct in basket.BasketProducts)
+                                {
+                                    <div class="basket-list-product-item">
+                                        @basketProduct.Product.Name
+                                        <span class="basket-list-product-qty">(Кол-во: @basketProduct.Quantity)</span>
+                                        <span class="basket-list-product-price">
+                                            Общая цена: @(basketProduct.Product.Price * basketProduct.Quantity)
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <style>
-    .container {
+    /* Основные контейнеры и обертки */
+    .basket-list-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Современный шрифт */
         max-width: 1200px;
-        margin: 20px auto;
-        padding: 20px;
+        margin: 30px auto; /* Увеличенный margin для пространства */
+        padding: 30px;
+        background-color: #f8f9fa; /* Светлый фон */
+        border-radius: 12px; /* Более закругленные углы */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Мягкая тень */
     }
 
-    .header {
+    .basket-list-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e9ecef; /* Более светлая разделительная линия */
     }
 
-    .create-btn {
+    .basket-list-title {
+        font-size: 2.5em; /* Увеличенный размер заголовка */
+        color: #343a40; /* Темно-серый цвет текста */
+        margin: 0;
+    }
+
+    /* Кнопка "Create New" */
+    .basket-list-create-btn {
         display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
+        padding: 12px 25px;
+        background-color: #00a79d; /* Бирюзовый цвет, более современный оттенок */
         color: white;
         text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s;
+        border-radius: 6px;
+        transition: background-color 0.3s, transform 0.2s;
+        font-weight: 500;
     }
 
-        .create-btn:hover {
-            background-color: #0056b3;
+        .basket-list-create-btn:hover {
+            background-color: #007a73; /* Более темный оттенок при наведении */
+            transform: translateY(-2px); /* Легкий эффект подъема при наведении */
         }
 
-    .table {
+    /* Обертка для таблицы для добавления отступа */
+    .basket-list-table-wrapper {
+        overflow-x: auto; /* Добавление горизонтальной прокрутки при необходимости */
+    }
+
+    /* Таблица стилей */
+    .basket-list-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        border-radius: 6px;
-        overflow: hidden;
+        margin-top: 10px;
+        border-radius: 8px;
+        overflow: hidden; /* Скрытие переполнения для border-radius */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Очень легкая тень для таблицы */
     }
 
-        .table th,
-        .table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e6e6e6;
-        }
-
-        .table th {
-            background-color: #f8f9fa;
-            color: #333;
-            font-weight: bold;
-            border-bottom: 2px solid #e6e6e6;
-        }
-
-        .table tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table tr:hover {
-            background-color: #f0f8ff;
-        }
-
-        .table .product-item {
-            margin-bottom: 10px;
-            padding: 8px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-    tbody tr td:first-child {
-        color: #666;
-    }
-
-    tbody tr td:nth-child(3) {
+    .basket-list-thead {
+        background-color: #e9ecef; /* Светло-серый фон для заголовка */
+        color: #495057; /* Серый цвет текста заголовка */
         font-weight: bold;
-        color: #28a745;
     }
 
-    tbody tr td:last-child {
-        width: 50%;
+    .basket-list-th, .basket-list-td {
+        padding: 16px 20px; /* Увеличенные отступы */
+        text-align: left;
+        border-bottom: 1px solid #f1f3f5; /* Очень светлая разделительная линия */
+    }
+
+    .basket-list-th {
+        border-bottom: 2px solid #d3d7db; /* Более выраженная разделительная линия для заголовка */
+    }
+
+    .basket-list-tbody .basket-list-tr:nth-child(odd) {
+        background-color: #ffffff; /* Белый фон для нечетных строк */
+    }
+
+    .basket-list-tbody .basket-list-tr:nth-child(even) {
+        background-color: #f8f9fa; /* Очень светло-серый для четных строк для легкого контраста */
+    }
+
+    .basket-list-tbody .basket-list-tr:hover {
+        background-color: #f0f8ff; /* Мягкий цвет при наведении */
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    /* Контейнер для продуктов в таблице */
+    .basket-list-products-container {
+        display: flex;
+        flex-direction: column; /* Продукты располагаются вертикально */
+        gap: 8px; /* Отступ между элементами продукта */
+    }
+
+    .basket-list-product-item {
+        padding: 10px 15px;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 0.95em;
+        color: #555;
+        display: flex; /* Используем flexbox для выравнивания цены */
+        justify-content: space-between; /* Цена справа */
+        align-items: center; /* Выравнивание по вертикали */
+    }
+
+    .basket-list-product-qty {
+        color: #777;
+        font-size: 0.9em;
+        margin-left: 5px;
+    }
+
+    .basket-list-product-price {
+        color: #28a745; /* Зеленый цвет для цены, как и был Total Price */
+        font-weight: bold; /* Выделение цены жирным */
+        margin-left: 10px; /* Отступ от количества */
+    }
+
+
+    /* Специализированные стили для ячеек таблицы */
+    .basket-list-tbody .basket-list-tr .basket-list-td:first-child {
+        color: #555; /* Более темный цвет для ID */
+    }
+
+
+    .basket-list-tbody .basket-list-tr .basket-list-td:last-child {
+        width: 50%; /* Ширина колонки Products */
     }
 </style>
