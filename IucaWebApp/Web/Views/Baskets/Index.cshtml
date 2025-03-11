@@ -1,174 +1,182 @@
-﻿@model IEnumerable<Domain.Entities.Basket>
+﻿@{
+    ViewData["Title"] = "Корзина";
+}
 
-<div class="basket-list-container">
-    <header class="basket-list-header">
-        <h1 class="basket-list-title">Корзины</h1>
-        <a class="basket-list-create-btn" asp-action="Create">Создать новую корзину</a>
-    </header>
-
-    <div class="basket-list-table-wrapper">
-        <table class="basket-list-table">
-            <thead class="basket-list-thead">
-                <tr>
-                    <th class="basket-list-th">ID</th>
-                    <th class="basket-list-th">Статус</th>
-                    <th class="basket-list-th">Продукты</th>
-                </tr>
-            </thead>
-            <tbody class="basket-list-tbody">
-                @foreach (var basket in Model)
-                {
-                    <tr class="basket-list-tr">
-                        <td class="basket-list-td">@basket.Id</td>
-                        <td class="basket-list-td">@basket.Status</td>
-                        <td class="basket-list-td">
-                            <div class="basket-list-products-container">
-                                @foreach (var basketProduct in basket.BasketProducts)
-                                {
-                                    <div class="basket-list-product-item">
-                                        @basketProduct.Product.Name
-                                        <span class="basket-list-product-qty">(Кол-во: @basketProduct.Quantity)</span>
-                                        <span class="basket-list-product-price">
-                                            Общая цена: @(basketProduct.Product.Price * basketProduct.Quantity)
-                                        </span>
-                                    </div>
-                                }
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 
 <style>
-    /* Основные контейнеры и обертки */
-    .basket-list-container {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Современный шрифт */
-        max-width: 1200px;
-        margin: 30px auto; /* Увеличенный margin для пространства */
-        padding: 30px;
-        background-color: #f8f9fa; /* Светлый фон */
-        border-radius: 12px; /* Более закругленные углы */
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Мягкая тень */
+    /* Дополнительные стили */
+    :root {
+        --mdc-typography-font-family: 'Open Sans', sans-serif;
+        --mdc-theme-secondary: #448AFF;
     }
 
-    .basket-list-header {
+    .cart-page-title {
+        margin-bottom: 32px;
+        color: #333;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
+
+    .cart-card {
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px -1px rgba(0,0,0,.15), 0 4px 8px 0 rgba(0,0,0,.10), 0 1px 12px 0 rgba(0,0,0,.08);
+        border-radius: 4px;
+    }
+
+    .cart-list {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .cart-list-item {
+        padding: 20px 28px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #e9ecef; /* Более светлая разделительная линия */
     }
 
-    .basket-list-title {
-        font-size: 2.5em; /* Увеличенный размер заголовка */
-        color: #343a40; /* Темно-серый цвет текста */
-        margin: 0;
+    .cart-item-content {
+        flex: 1;
     }
 
-    /* Кнопка "Create New" */
-    .basket-list-create-btn {
-        display: inline-block;
-        padding: 12px 25px;
-        background-color: #00a79d; /* Бирюзовый цвет, более современный оттенок */
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        transition: background-color 0.3s, transform 0.2s;
+    .cart-item-actions {
+        margin-left: 16px;
+    }
+
+    .cart-item-name {
+        font-size: 1rem;
+        color: #212121;
         font-weight: 500;
     }
 
-        .basket-list-create-btn:hover {
-            background-color: #007a73; /* Более темный оттенок при наведении */
-            transform: translateY(-2px); /* Легкий эффект подъема при наведении */
-        }
-
-    /* Обертка для таблицы для добавления отступа */
-    .basket-list-table-wrapper {
-        overflow-x: auto; /* Добавление горизонтальной прокрутки при необходимости */
+    .cart-item-details {
+        font-size: 0.875rem;
+        color: #757575;
     }
 
-    /* Таблица стилей */
-    .basket-list-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        border-radius: 8px;
-        overflow: hidden; /* Скрытие переполнения для border-radius */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Очень легкая тень для таблицы */
+    .empty-cart-message {
+        padding: 24px;
+        text-align: center;
+        color: #757575;
     }
 
-    .basket-list-thead {
-        background-color: #e9ecef; /* Светло-серый фон для заголовка */
-        color: #495057; /* Серый цвет текста заголовка */
+    .cart-total-block {
+        margin-top: 24px;
+    }
+
+    .cart-total-label {
         font-weight: bold;
+        margin-right: 8px;
     }
 
-    .basket-list-th, .basket-list-td {
-        padding: 16px 20px; /* Увеличенные отступы */
-        text-align: left;
-        border-bottom: 1px solid #f1f3f5; /* Очень светлая разделительная линия */
+    .cart-total-sum {
+        font-size: 1.2rem;
+        color: #3F51B5;
     }
 
-    .basket-list-th {
-        border-bottom: 2px solid #d3d7db; /* Более выраженная разделительная линия для заголовка */
+    body {
+        line-height: 1.6;
+        font-size: 16px;
     }
 
-    .basket-list-tbody .basket-list-tr:nth-child(odd) {
-        background-color: #ffffff; /* Белый фон для нечетных строк */
+    .mdc-typography--headline3 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
     }
 
-    .basket-list-tbody .basket-list-tr:nth-child(even) {
-        background-color: #f8f9fa; /* Очень светло-серый для четных строк для легкого контраста */
+    .mdc-typography--headline6 {
+        font-weight: 500;
     }
 
-    .basket-list-tbody .basket-list-tr:hover {
-        background-color: #f0f8ff; /* Мягкий цвет при наведении */
-        transition: background-color 0.2s ease-in-out;
-    }
-
-    /* Контейнер для продуктов в таблице */
-    .basket-list-products-container {
-        display: flex;
-        flex-direction: column; /* Продукты располагаются вертикально */
-        gap: 8px; /* Отступ между элементами продукта */
-    }
-
-    .basket-list-product-item {
-        padding: 10px 15px;
-        background-color: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 6px;
-        font-size: 0.95em;
-        color: #555;
-        display: flex; /* Используем flexbox для выравнивания цены */
-        justify-content: space-between; /* Цена справа */
-        align-items: center; /* Выравнивание по вертикали */
-    }
-
-    .basket-list-product-qty {
-        color: #777;
-        font-size: 0.9em;
-        margin-left: 5px;
-    }
-
-    .basket-list-product-price {
-        color: #28a745; /* Зеленый цвет для цены, как и был Total Price */
-        font-weight: bold; /* Выделение цены жирным */
-        margin-left: 10px; /* Отступ от количества */
-    }
-
-
-    /* Специализированные стили для ячеек таблицы */
-    .basket-list-tbody .basket-list-tr .basket-list-td:first-child {
-        color: #555; /* Более темный цвет для ID */
-    }
-
-
-    .basket-list-tbody .basket-list-tr .basket-list-td:last-child {
-        width: 50%; /* Ширина колонки Products */
+    .remove-btn {
+        color: #f44336;
+        cursor: pointer;
     }
 </style>
+
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+            <h1 class="mdc-typography--headline3 cart-page-title">Корзина</h1>
+        </div>
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+            <div id="cart-items" class="mdc-card mdc-card--outlined cart-card">
+                <div class="mdc-card__content">
+                </div>
+            </div>
+        </div>
+
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+            <div id="cart-total" class="mdc-card mdc-card--outlined cart-card cart-total-block">
+                <div class="mdc-card__content">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mdc.autoInit();
+
+            function renderCart() {
+                var cartItemsDiv = document.getElementById('cart-items').querySelector('.mdc-card__content');
+                var cartTotalDiv = document.getElementById('cart-total').querySelector('.mdc-card__content');
+                var cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+
+                if (cart.length === 0) {
+                    cartItemsDiv.innerHTML = "<p class='mdc-typography--body1 empty-cart-message'>Ваша корзина пуста.</p>";
+                    cartTotalDiv.innerHTML = "";
+                } else {
+                    var cartHtml = `<ul class='mdc-list mdc-list--two-line cart-list'>`;
+                    let totalSum = 0;
+
+                    cart.forEach(function (item, index) {
+                        cartHtml += `
+                            <li class='mdc-list-item cart-list-item'>
+                                <div class='cart-item-content'>
+                                    <span class='mdc-list-item__primary-text cart-item-name'>${item.name}</span>
+                                    <span class='mdc-list-item__secondary-text cart-item-details'>${item.quantity} шт. - ${item.price} ₽</span>
+                                </div>
+                                <div class='cart-item-actions'>
+                                    <button class='mdc-button mdc-button--outlined remove-btn' data-item-index='${index}'>
+                                        <span class='mdc-button__label'>Удалить</span>
+                                    </button>
+                                </div>
+                            </li>
+                            <li class='mdc-list-divider' role='separator'></li>
+                        `;
+                        totalSum += item.price * item.quantity;
+                    });
+                    cartHtml += "</ul>";
+                    cartItemsDiv.innerHTML = cartHtml;
+
+                    var totalHtml = `
+                        <span class='cart-total-label mdc-typography--headline6'>Итого:</span>
+                        <span class='cart-total-sum mdc-typography--headline6'>${totalSum.toFixed(2)} ₽</span>
+                    `;
+
+                    cartTotalDiv.innerHTML = totalHtml;
+                }
+
+                // Обработка кнопок удаления
+                document.querySelectorAll('.remove-btn').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var itemIndex = this.getAttribute('data-item-index');
+                        cart.splice(itemIndex, 1);
+                        localStorage.setItem('shoppingCart', JSON.stringify(cart));
+                        renderCart();
+                    });
+                });
+            }
+
+            // Первоначальная отрисовка корзины
+            renderCart();
+        });
+    </script>
+}

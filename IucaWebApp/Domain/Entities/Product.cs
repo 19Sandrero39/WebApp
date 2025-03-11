@@ -34,6 +34,6 @@ namespace Domain.Entities
         [StringLength(255, ErrorMessage = "Изображение не должно превышать 255 символов")]
         public string Image { get; set; } = null!;
 
-        public IList<BasketProduct> BasketProducts { get; private set; } = new List<BasketProduct>();
+        public IList<Basket> Baskets { get; private set; } = new List<Basket>();
     }
 }
