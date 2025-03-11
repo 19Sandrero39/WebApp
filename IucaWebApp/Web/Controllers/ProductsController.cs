@@ -37,17 +37,17 @@ namespace Web.Controllers
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product products)
+        public ActionResult Create(Product product)
         {
             try
             {
-                _context.Add(products);
+                _context.Add(product);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View(products);
+                return View(product);
             }
         }
 
@@ -60,17 +60,17 @@ namespace Web.Controllers
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Product products)
+        public ActionResult Edit(int id, Product product)
         {
             try
             {
-                _context.Update(products);
+                _context.Update(product);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View(products);
+                return View(product);
             }
         }
 
@@ -83,11 +83,11 @@ namespace Web.Controllers
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Product products)
+        public ActionResult Delete(int id, Product product)
         {
             try
             {
-                _context.Remove(products);
+                _context.Remove(product);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

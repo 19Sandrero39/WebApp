@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+public class Basket
 {
-    public class Basket
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(50, ErrorMessage = "Статус не может превышать 50 символов")]
-        public string Status { get; set; } = null!;
+    [Required]
+    public string UserId { get; set; } = null!;
 
-        [Required]
-        [Range(0, float.MaxValue, ErrorMessage = "Итоговая цена должна быть неотрицательной")]
-        public float TotalPrice { get; set; }
+    [Required]
+    public int ProductId { get; set; }
 
-        public IList<BasketProduct> BasketProducts { get; private set; } = new List<BasketProduct>();
-    }
+    [Required]
+    [Range(0, int.MaxValue, ErrorMessage = "Количество должно быть неотрицательным")]
+    public int Quantity { get; set; }
+
+    public Product Product { get; set; } = null!;
 }

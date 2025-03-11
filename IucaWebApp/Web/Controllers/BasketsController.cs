@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
 using Infrastructure.Data;
-using Domain.Entities;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
     public class BasketsController : Controller
     {
+
         private readonly ApplicationDbContext _context;
 
         public BasketsController(ApplicationDbContext context)
@@ -19,11 +18,7 @@ namespace Web.Controllers
         // GET: BasketsController
         public ActionResult Index()
         {
-            var baskets = _context.Baskets
-                .Include(b => b.BasketProducts)
-                .ThenInclude(bp => bp.Product)
-                .ToList();
-            return View(baskets);
+            return View();
         }
 
         // GET: BasketsController/Details/5
@@ -35,61 +30,25 @@ namespace Web.Controllers
         // GET: BasketsController/Create
         public ActionResult Create()
         {
-            ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name");
-            return View(new Basket());
+            return View();
         }
 
         // POST: BasketsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Basket basket, int productId, int quantity)
+        public ActionResult Create(Basket basket)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // Save the basket to generate an ID
-                _context.Baskets.Add(basket);
+                _context.Add(basket);
                 _context.SaveChanges();
-
-                // Получаем продукт из базы данных
-                var product = _context.Products.Find(productId);
-
-                if (product == null)
-                {
-                    ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name", productId);
-                    return View(basket);
-                }
-
-                // Создаем новую запись BasketProduct
-                var basketProduct = new BasketProduct
-                {
-                    ProductId = productId,
-                    BasketId = basket.Id,
-                    Quantity = quantity,
-                    // Price = product.Price, // Раскомментируйте и добавьте поле Price в BasketProduct если нужно сохранять цену
-                };
-
-                _context.BasketProducts.Add(basketProduct);
-                _context.SaveChanges();
-
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name", productId);
-            return View(basket);
-        }
-
-        // GET: Baskets/GetProductPrice
-        [HttpGet]
-        public JsonResult GetProductPrice(int productId)
-        {
-            var product = _context.Products.Find(productId);
-            if (product == null)
+            catch
             {
-                return Json(new { price = 0 }); // Или другой вариант обработки ошибки
+                return View();
             }
-            return Json(new { price = product.Price });
         }
-
 
         // GET: BasketsController/Edit/5
         public ActionResult Edit(int id)

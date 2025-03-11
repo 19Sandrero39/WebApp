@@ -22,32 +22,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BasketProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BasketId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("BasketProducts");
-                });
-
             modelBuilder.Entity("Domain.Entities.Basket", b =>
                 {
                     b.Property<int>("Id")
@@ -56,17 +30,21 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
 
-                    b.Property<float>("TotalPrice")
-                        .HasColumnType("real");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Baskets");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Basket");
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -307,21 +285,13 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BasketProduct", b =>
+            modelBuilder.Entity("Domain.Entities.Basket", b =>
                 {
-                    b.HasOne("Domain.Entities.Basket", "Basket")
-                        .WithMany("BasketProducts")
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Product", "Product")
-                        .WithMany("BasketProducts")
+                        .WithMany("Baskets")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Basket");
 
                     b.Navigation("Product");
                 });
@@ -377,14 +347,9 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Basket", b =>
-                {
-                    b.Navigation("BasketProducts");
-                });
-
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
-                    b.Navigation("BasketProducts");
+                    b.Navigation("Baskets");
                 });
 #pragma warning restore 612, 618
         }

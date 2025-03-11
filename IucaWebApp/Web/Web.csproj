@@ -22,4 +22,11 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Baskets\CSS\" />
+    <Folder Include="Views\Baskets\JavaScript\" />
+    <Folder Include="Views\Products\CSS\" />
+    <Folder Include="Views\Products\JavaScript\" />
+  </ItemGroup>
+
 </Project>
